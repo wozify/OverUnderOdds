@@ -25,6 +25,8 @@ def get_odds_data(base_url):
                     line = odds.find('span', class_='data-moneyline')
                     if line is None:
                         utils.append('NA')
+                    elif 'o' not in line.text and 'u' not in line.text:
+                        utils.append('o0.5')
                     else:
                         utils.append(line.text)
                     value = odds.find('small', class_='data-odds best')
@@ -39,7 +41,7 @@ def get_odds_data(base_url):
 
                     data.append(utils)
 
-    df = pd.DataFrame(data,columns=["attributes.name","attributes.line_score","Odds","attributes.stat_type"])
+    df = pd.DataFrame(data,columns=["attributes.name","scores_line_score","Odds","attributes.stat_type"])
 
     return df
 

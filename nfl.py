@@ -3,7 +3,7 @@ pd.set_option('mode.chained_assignment', None)
 import gspread
 
 from prizepicksscrape import call_endpoint
-from scoresandoddsscrape_baseball import get_odds_data
+from scoresandoddsscrape_nfl import get_odds_data
 
 gc = gspread.service_account(filename='peak-apparatus-465118-e6-a206e52e32e9.json')
 
@@ -11,10 +11,10 @@ gc = gspread.service_account(filename='peak-apparatus-465118-e6-a206e52e32e9.jso
 sh = gc.open("OverUnderOdds")
 
 # Select a sheet
-worksheet = sh.worksheet("Baseball")
+worksheet = sh.worksheet("Football")
 
-odds_url = 'https://www.scoresandodds.com/mlb/props/'
-prizepicks_url = 'https://partner-api.prizepicks.com/projections?league_id=2'
+odds_url = 'https://www.scoresandodds.com/nfl/props/'
+prizepicks_url = 'https://partner-api.prizepicks.com/projections?league_id=9'
 
 # Get Odds from ScoresAndOdds
 odds_df = get_odds_data(odds_url)

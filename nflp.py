@@ -3,7 +3,7 @@ pd.set_option('mode.chained_assignment', None)
 import gspread
 
 from prizepicksscrape import call_endpoint
-from scoresandoddsscrape_nba import get_odds_data
+from scoresandoddsscrape_nfl import get_odds_data
 
 gc = gspread.service_account(filename='peak-apparatus-465118-e6-a206e52e32e9.json')
 
@@ -11,10 +11,10 @@ gc = gspread.service_account(filename='peak-apparatus-465118-e6-a206e52e32e9.jso
 sh = gc.open("OverUnderOdds")
 
 # Select a sheet
-worksheet = sh.worksheet("WNBA")
+worksheet = sh.worksheet("Football_Preseason")
 
-odds_url = 'https://www.scoresandodds.com/wnba/props/'
-prizepicks_url = 'https://partner-api.prizepicks.com/projections?league_id=3'
+odds_url = 'https://www.scoresandodds.com/nfl/props/'
+prizepicks_url = 'https://partner-api.prizepicks.com/projections?league_id=44'
 
 # Get Odds from ScoresAndOdds
 odds_df = get_odds_data(odds_url)
@@ -31,7 +31,7 @@ grouped_by_boolean = picks_df.loc[picks_df['attributes.adjusted_odds'] == False]
 grouped_by_boolean['attributes.line_score'] = grouped_by_boolean['attributes.line_score'].str.replace('o', 'u')
 picks_df = pd.concat([picks_df, grouped_by_boolean], ignore_index=True)
 
-odds_df.to_csv('wnba_odds.csv', index=False)
+odds_df.to_csv('nfl_odds.csv', index=False)
 picks_df.to_csv('prizepicks.csv', index=False)
 
 # Merges odds with prizepicks list

@@ -6,14 +6,14 @@ def get_odds_data(base_url):
 
     data = []
 
-    nba_props_list = {'points':'Points', 'rebounds':'Rebounds', 'assists':'Assists', 'blocks':'Blocks', 'steals':'Steals', '3-pointers':'3-Pointers Made', 'points-&-rebounds':'Points + Rebounds', 'points-&-assists':'Points + Assists', 'points,-rebounds,-&-assists':'Points + Rebounds + Assists', 'rebounds-&-assists':'Assists + Rebounds'}
+    nba_props_list = {'points,-rebounds,-&-assists':'Pts+Rebs+Asts', 'points':'Points', 'rebounds':'Rebounds', '3-pointers':'3-PT Made', 'assists':'Assists', 'points-&-assists':'Pts+Asts', 'rebounds-&-assists':'Rebs+Asts'}
 
     for propKey, propValue in nba_props_list.items():
-        page = requests.get(base_url+propKey)
+        page = requests.get(base_url + propKey)
         soup = BeautifulSoup(page.content, 'html.parser')
-        results = soup.find('ul', class_ = 'table-list')
+        results = soup.find('ul', class_='table-list')
 
-        rows = results.find_all('li', class_ = 'border')
+        rows = results.find_all('li', class_='border')
 
         for row in rows:
             name_div = row.find('div', class_='props-name')
@@ -25,10 +25,8 @@ def get_odds_data(base_url):
                     line = odds.find('span', class_='data-moneyline')
                     if line is None:
                         utils.append('NA')
-                        utils.append('NA')
                     else:
                         utils.append(line.text)
-                        utils.append(line.text[0])
                     value = odds.find('small', class_='data-odds best')
                     if value is None:
                         utils.append(1000)
@@ -41,7 +39,9 @@ def get_odds_data(base_url):
 
                     data.append(utils)
 
-    df = pd.DataFrame(data,columns=["Name","Line","O/U","Odds","Type"])
+    df = pd.DataFrame(data)
+
+    df.columns=["attributes.name", "attributes.line_score", "Odds", "attributes.stat_type"]
 
     return df
 
