@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-def get_odds_data(base_url):
+def get_nfl_data():
+    base_url = 'https://www.scoresandodds.com/nfl/props/'
 
     data = []
 
@@ -51,6 +52,3 @@ def get_odds_data(base_url):
     df = pd.DataFrame(data, columns=["attributes.name","scores_line_score","Odds","attributes.stat_type"])
 
     return df
-
-#print(oddsDf.sort_values(by='Odds'))
-

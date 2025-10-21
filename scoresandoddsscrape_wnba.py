@@ -2,12 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-def get_nba_data():
-    base_url = 'https://www.scoresandodds.com/nba/props/'
+def get_wnba_data():
+    base_url = 'https://www.scoresandodds.com/wnba/props/'
 
     data = []
 
-    nba_props_list = {'points':'Points', 'rebounds':'Rebounds', 'assists':'Assists', 'blocks':'Blocks', 'steals':'Steals', '3-pointers':'3-PT Made', 'points-&-rebounds':'Pts+Rebs', 'points-&-assists':'Pts+Asts', 'points,-rebounds,-&-assists':'Pts+Rebs+Asts', 'rebounds-&-assists':'Rebs+Asts', 'turnovers':'Turnovers'}
+    nba_props_list = {'points,-rebounds,-&-assists':'Pts+Rebs+Asts', 'points':'Points', 'rebounds':'Rebounds', '3-pointers':'3-PT Made', 'assists':'Assists', 'points-&-assists':'Pts+Asts', 'rebounds-&-assists':'Rebs+Asts'}
 
     for propKey, propValue in nba_props_list.items():
         page = requests.get(base_url + propKey)
@@ -18,7 +18,7 @@ def get_nba_data():
 
         for row in rows:
             name_div = row.find('div', class_='props-name')
-            name = name_div.find('a')
+            name = name_div.find('span')
             if name is not None:
                 odds_list = row.find_all('div', class_='game-odds best')
                 for odds in odds_list:
@@ -26,8 +26,6 @@ def get_nba_data():
                     line = odds.find('span', class_='data-moneyline')
                     if line is None:
                         utils.append('NA')
-                    elif 'o' not in line.text and 'u' not in line.text:
-                        utils.append('o0.5')
                     else:
                         utils.append(line.text)
                     value = odds.find('small', class_='data-odds best')

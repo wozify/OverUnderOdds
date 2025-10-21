@@ -2,19 +2,19 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-def get_nba_data():
-    base_url = 'https://www.scoresandodds.com/nba/props/'
+def get_nhl_data():
+    base_url = 'https://www.scoresandodds.com/nhl/props/'
 
     data = []
 
-    nba_props_list = {'points':'Points', 'rebounds':'Rebounds', 'assists':'Assists', 'blocks':'Blocks', 'steals':'Steals', '3-pointers':'3-PT Made', 'points-&-rebounds':'Pts+Rebs', 'points-&-assists':'Pts+Asts', 'points,-rebounds,-&-assists':'Pts+Rebs+Asts', 'rebounds-&-assists':'Rebs+Asts', 'turnovers':'Turnovers'}
+    mlb_props_list = {'goals':'Goals', 'shots-on-goal':'Shots On Goal', 'assists':'Assists', 'points':'Points', 'blocked-shots':'Blocked Shots'}
 
-    for propKey, propValue in nba_props_list.items():
-        page = requests.get(base_url + propKey)
+    for propKey, propValue in mlb_props_list.items():
+        page = requests.get(base_url+propKey)
         soup = BeautifulSoup(page.content, 'html.parser')
-        results = soup.find('ul', class_='table-list')
+        results = soup.find('ul', class_ = 'table-list')
 
-        rows = results.find_all('li', class_='border')
+        rows = results.find_all('li', class_ = 'border')
 
         for row in rows:
             name_div = row.find('div', class_='props-name')
@@ -42,6 +42,6 @@ def get_nba_data():
 
                     data.append(utils)
 
-    df = pd.DataFrame(data, columns=["attributes.name", "scores_line_score", "Odds", "attributes.stat_type"])
+    df = pd.DataFrame(data,columns=["attributes.name","scores_line_score","Odds","attributes.stat_type"])
 
     return df
